@@ -1,7 +1,7 @@
 {
-  "name": "@pinia/plugin-debounce",
-  "version": "0.0.2",
-  "description": "Debounce any action in your pinia 🍍 store!",
+  "name": "pinia-plugin-history",
+  "version": "0.0.1",
+  "description": "Create a history (undo/redo) in your pinia 🍍 stores!",
   "publishConfig": {
     "access": "public"
   },
@@ -15,10 +15,9 @@
     "import": "./dist/index.mjs"
   },
   "sideEffects": false,
-  "funding": "https://github.com/sponsors/posva",
   "author": {
-    "name": "Eduardo San Martin Morote",
-    "email": "posva13@gmail.com"
+    "name": "Yasser Lahbibi",
+    "email": "yasser.lahbibi@sciencespo.fr"
   },
   "scripts": {
     "dev": "mocha -w",
@@ -43,10 +42,9 @@
   "keywords": [
     "pinia",
     "plugin",
-    "debounce",
-    "example",
-    "starter",
-    "boilerplate"
+    "history",
+    "undo",
+    "redo"
   ],
   "license": "MIT",
   "devDependencies": {
@@ -89,10 +87,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/posva/pinia-plugin-debounce.git"
+    "url": "git+https://github.com/yassilah/pinia-plugin-history.git"
   },
   "bugs": {
-    "url": "https://github.com/posva/pinia-plugin-debounce/issues"
+    "url": "https://github.com/yassilah/pinia-plugin-history/issues"
   },
-  "homepage": "https://github.com/posva/pinia-plugin-debounce#readme"
+  "homepage": "https://github.com/yassilah/pinia-plugin-history#readme"
 }
