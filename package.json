@@ -30,7 +30,7 @@
     "test:cov": "nyc mocha",
     "build": "pnpm build:esm & pnpm build:iife & wait",
     "build:esm": "tsup src/index.ts --format esm,cjs --dts --target es2020",
-    "build:iife": "tsup src/index.ts --format iife --minify --global-name PiniaDebounce --target es2020"
+    "build:iife": "tsup src/index.ts --format iife --minify --global-name PiniaHistory --target es2020"
   },
   "files": [
     "dist/*.js",
