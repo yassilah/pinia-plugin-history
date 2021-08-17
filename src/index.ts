@@ -249,7 +249,7 @@ function createWatcher($store: HistoryStore, $history: History) {
  * @param method
  * @returns
  */
-export function persistentKey(store: HistoryStore, method: 'undo' | 'redo') {
+export function persistentKey(store: Store, method: 'undo' | 'redo') {
   return `pinia-plugin-history-${store.$id}-${method}` as const
 }
 
