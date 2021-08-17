@@ -92,7 +92,6 @@ export interface HistoryStore
  */
 export const BasePiniaHistoryOptions = {
   max: 10,
-  type: 'mutations',
   persistent: false,
   persistentStrategy: {
     get(store: HistoryStore, type: 'undo' | 'redo'): string[] | undefined {
@@ -192,13 +191,13 @@ function createPersistentHistoryWatcher(
  * @returns
  */
 function createStackMethod(
-  store: HistoryStore,
+  $store: HistoryStore,
   $history: History,
   method: 'undo' | 'redo'
 ) {
   const can = method === 'undo' ? 'canUndo' : 'canRedo'
   return () => {
-    if (store[can]) {
+    if ($store[can]) {
       const { undone, done, max, current } = $history
       const stack = method === 'undo' ? done : undone
       const reverseStack = method === 'undo' ? undone : done
@@ -214,10 +213,10 @@ function createStackMethod(
       reverseStack.push(current)
 
       $history.trigger = false
-      store.$patch(JSON.parse(state))
+      $store.$patch(JSON.parse(state))
       $history.trigger = true
 
-      persistHistory(store, $history)
+      persistHistory($store, $history)
     }
   }
 }
@@ -226,10 +225,11 @@ function createStackMethod(
  * Create the store watcher to save
  * every mutation change.
  *
+ * @param $store
  * @param $history
  * @returns
  */
-function createWatcher($history: History) {
+function createWatcher($store: HistoryStore, $history: History) {
   return (
     _mutation: SubscriptionCallbackMutation<any>,
     state: HistoryStore['$state']
@@ -243,6 +243,7 @@ function createWatcher($history: History) {
 
       done.push(current)
       $history.undone = []
+      persistHistory($store, $history)
     }
 
     $history.current = JSON.stringify(state)
@@ -300,7 +301,7 @@ export const PiniaHistory = ({ options, store }: PiniaPluginContext) => {
 
     store.redo = createStackMethod($store, $history, 'redo')
 
-    store.$subscribe(createWatcher($history))
+    store.$subscribe(createWatcher($store, $history))
 
     createPersistentHistoryWatcher($store, $history)
   }
