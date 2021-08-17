@@ -1,6 +1,6 @@
 <h1>
   <img height="64" src="https://pinia.esm.dev/logo.svg" alt="Pinia logo">
-  Pinia Debounce
+  Pinia Plugin History
 </h1>
 
 <a href="https://npmjs.com/package/pinia-plugin-history">
