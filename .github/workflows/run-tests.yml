@@ -16,4 +16,3 @@ jobs:
       - run: npm install --frozen-lockfile
       - run: npm run lint
       - run: npm run test
-      - run: npm codecov

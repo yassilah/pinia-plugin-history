@@ -6,8 +6,8 @@
 <a href="https://npmjs.com/package/pinia-plugin-history">
   <img src="https://badgen.net/npm/v/pinia-plugin-history" alt="npm package">
 </a>
-<a href="https://github.com/yassilah/pinia-plugin-history/actions/workflows/test.yml">
-  <img src="https://github.com/yassilah/pinia-plugin-history/workflows/test/badge.svg" alt="build status">
+<a href="https://github.com/yassilah/pinia-plugin-history/actions/workflows/run-tests.yml">
+  <img src="https://github.com/yassilah/pinia-plugin-history/actions/workflows/run-tests.yml/badge.svg" alt="build status">
 </a>
 <a href="https://codecov.io/gh/yassilah/pinia-plugin-history">
   <img src="https://codecov.io/gh/yassilah/pinia-plugin-history/branch/main/graph/badge.svg"/>
