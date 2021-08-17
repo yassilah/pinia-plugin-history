@@ -72,12 +72,11 @@ async function main() {
 
   // Build the package.
   step('\nBuilding the package...')
-  await run('pnpm', ['build'])
+  await run('npm', ['run', 'build'])
 
   // Generate the changelog.
   step('\nGenerating the changelog...')
-  await run('pnpm', ['changelog'])
-  await run('pnpm', ['prettier', '--write', 'CHANGELOG.md'])
+  await run('npm', ['run', 'changelog'])
 
   const { yes: changelogOk } = await prompt({
     type: 'confirm',
