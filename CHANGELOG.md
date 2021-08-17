@@ -2,6 +2,10 @@
 
 
 
+## [1.0.1](https://github.com/yassilah/pinia-plugin-history/compare/v1.0.2...v1.0.1) (2021-08-17)
+
+
+
 ### Bug Fixes
 
 * **persistency:** persist store on change ([bbb83fb](https://github.com/yassilah/pinia-plugin-history/commit/bbb83fb750f530df43a322fa3b123ad0ab3d44c7))
