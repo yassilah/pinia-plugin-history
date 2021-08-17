@@ -147,39 +147,31 @@ function persistHistory(store: HistoryStore, $history: History) {
 }
 
 /**
- * Watch for the persistent option value.
+ * Create a persistent history.
  *
  * @param $store
  * @param $history
  * @returns
  */
-function createPersistentHistoryWatcher(
-  $store: HistoryStore,
-  $history: History
-) {
-  watch(
-    () => $history.persistent,
-    (persistent: boolean) => {
-      const { persistentStrategy } = $history
-      if (persistent) {
-        if ($history.done.length === 0) {
-          $history.done = persistentStrategy.get($store, 'undo') ?? []
-        } else {
-          persistentStrategy.set($store, 'undo', $history.done)
-        }
+function createPersistentHistory($store: HistoryStore, $history: History) {
+  const { persistent, persistentStrategy } = $history
 
-        if ($history.undone.length === 0) {
-          $history.undone = persistentStrategy.get($store, 'redo') ?? []
-        } else {
-          persistentStrategy.set($store, 'redo', $history.undone)
-        }
-      } else {
-        persistentStrategy.remove($store, 'undo')
-        persistentStrategy.remove($store, 'redo')
-      }
-    },
-    { immediate: true }
-  )
+  if (persistent) {
+    if ($history.done.length === 0) {
+      $history.done = persistentStrategy.get($store, 'undo') ?? []
+    } else {
+      persistentStrategy.set($store, 'undo', $history.done)
+    }
+
+    if ($history.undone.length === 0) {
+      $history.undone = persistentStrategy.get($store, 'redo') ?? []
+    } else {
+      persistentStrategy.set($store, 'redo', $history.undone)
+    }
+  } else {
+    persistentStrategy.remove($store, 'undo')
+    persistentStrategy.remove($store, 'redo')
+  }
 }
 
 /**
@@ -303,6 +295,6 @@ export const PiniaHistory = ({ options, store }: PiniaPluginContext) => {
 
     store.$subscribe(createWatcher($store, $history))
 
-    createPersistentHistoryWatcher($store, $history)
+    createPersistentHistory($store, $history)
   }
 }
