@@ -1,6 +1,6 @@
 {
   "name": "pinia-plugin-history",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Create a history (undo/redo) in your pinia 🍍 stores!",
   "publishConfig": {
     "access": "public"
@@ -23,12 +23,12 @@
     "dev": "mocha -w",
     "release": "node scripts/release.mjs",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 1",
-    "test": "pnpm run test:cov",
+    "test": "npm run test:cov",
     "lint": "prettier -c --parser typescript \"src/**/*.[jt]s?(x)\"",
     "lint:fix": "yarn run lint --write",
     "test:types": "tsc --build ./tsconfig.json",
     "test:cov": "nyc mocha",
-    "build": "pnpm build:esm & pnpm build:iife & wait",
+    "build": "npm run build:esm & npm run build:iife & wait",
     "build:esm": "tsup src/index.ts --format esm,cjs --dts --target es2020",
     "build:iife": "tsup src/index.ts --format iife --minify --global-name PiniaHistory --target es2020"
   },
