@@ -1,3 +1,13 @@
+## [1.0.1](https://github.com/yassilah/pinia-plugin-history/compare/v1.0.0...v1.0.1) (2021-08-17)
+
+
+### Bug Fixes
+
+* **persistency:** persist store on change ([bbb83fb](https://github.com/yassilah/pinia-plugin-history/commit/bbb83fb750f530df43a322fa3b123ad0ab3d44c7))
+* **readme:** Change title (oops) ([c700ac7](https://github.com/yassilah/pinia-plugin-history/commit/c700ac7045c5e784869e256534acf3ac546c76ec))
+
+
+
 # [1.0.0](https://github.com/yassilah/pinia-plugin-history/compare/v0.0.2...v1.0.0) (2021-08-17)
 
 
