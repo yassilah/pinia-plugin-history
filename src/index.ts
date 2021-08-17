@@ -260,7 +260,7 @@ export function persistentKey(store: HistoryStore, method: 'undo' | 'redo') {
  * @example
  *
  * ```ts
- * import { PiniaHistory } from '@yassipad/pinia-plugin-history'
+ * import { PiniaHistory } from 'pinia-plugin-history'
  *
  * // Pass the plugin to your application's pinia plugin
  * pinia.use(PiniaHistory)
