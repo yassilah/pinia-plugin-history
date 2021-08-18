@@ -5,7 +5,7 @@ import {
   SubscriptionCallbackMutation,
 } from 'pinia'
 import { computed, ComputedRef, reactive } from 'vue'
-import { Delta, diff, patch } from 'jsondiffpatch'
+import { Delta, diff, patch, reverse } from 'jsondiffpatch'
 
 declare module 'pinia' {
   export interface DefineStoreOptionsBase<S, Store> {
@@ -64,7 +64,11 @@ export interface HistoryPluginOptions {
       store: HistoryStore,
       type: 'undo' | 'redo'
     ): (Delta | undefined)[] | undefined
-    set(store: HistoryStore, type: 'undo' | 'redo', value: StateTree): void
+    set(
+      store: HistoryStore,
+      type: 'undo' | 'redo',
+      value: (Delta | undefined)[]
+    ): void
     remove(store: HistoryStore, type: 'undo' | 'redo'): void
   }
 }
@@ -82,7 +86,7 @@ export interface HistoryPluginGetters {
 export interface History extends HistoryPluginOptions {
   done: (Delta | undefined)[]
   undone: (Delta | undefined)[]
-  current: Delta | undefined
+  current: any
   trigger: boolean
 }
 
@@ -110,10 +114,17 @@ export const BasePiniaHistoryOptions = {
         return value.split(',').map((value) => JSON.parse(value))
       }
     },
-    set(store: HistoryStore, type: 'undo' | 'redo', value: string[]) {
+    set(
+      store: HistoryStore,
+      type: 'undo' | 'redo',
+      value: (Delta | undefined)[]
+    ) {
       if (typeof localStorage !== undefined) {
         const key = persistentKey(store, type)
-        localStorage.setItem(key, value.join(','))
+        localStorage.setItem(
+          key,
+          value.map((value) => JSON.stringify(value)).join(',')
+        )
       }
     },
     remove(store: HistoryStore, type: 'undo' | 'redo') {
@@ -123,6 +134,16 @@ export const BasePiniaHistoryOptions = {
       }
     },
   },
+}
+
+/**
+ * Returns raw object.
+ *
+ * @param object
+ * @returns
+ */
+function toObject(object: any) {
+  return JSON.parse(JSON.stringify(object))
 }
 
 /**
@@ -145,11 +166,16 @@ function mergeOptions(options: boolean | Partial<HistoryPluginOptions>) {
  * @param $history
  */
 function persistHistory(store: HistoryStore, $history: History) {
-  const { persistent, persistentStrategy, done, undone } = $history
+  const {
+    persistent,
+    persistentStrategy: { set },
+    done,
+    undone,
+  } = $history
 
   if (persistent) {
-    persistentStrategy.set(store, 'undo', done)
-    persistentStrategy.set(store, 'redo', undone)
+    set(store, 'undo', done)
+    set(store, 'redo', undone)
   }
 }
 
@@ -200,7 +226,7 @@ function createStackMethod(
   const can = method === 'undo' ? 'canUndo' : 'canRedo'
   return () => {
     if ($store[can]) {
-      const { undone, done, max, current } = $history
+      const { undone, done, max } = $history
       const stack = method === 'undo' ? done : undone
       const reverseStack = method === 'undo' ? undone : done
 
@@ -212,10 +238,10 @@ function createStackMethod(
         reverseStack.splice(0, 1)
       }
 
-      reverseStack.push(current)
+      reverseStack.push(reverse(delta))
 
       $history.trigger = false
-      const newState = patch($store, delta)
+      const newState = patch(toObject($store.$state), delta)
       $store.$patch(newState)
       $history.trigger = true
 
@@ -244,14 +270,14 @@ function createWatcher($store: HistoryStore, $history: History) {
         done.splice(0, 1)
       }
 
-      const delta = diff(current, JSON.parse(JSON.stringify(state)))
+      const delta = diff(toObject(state), current)
 
       done.push(delta)
       $history.undone = []
       persistHistory($store, $history)
     }
 
-    $history.current = diff(current, JSON.parse(JSON.stringify(state)))
+    $history.current = toObject(state)
   }
 }
 
@@ -293,7 +319,7 @@ export const PiniaHistory = ({ options, store }: PiniaPluginContext) => {
       persistentStrategy,
       done: [],
       undone: [],
-      current: undefined,
+      current: toObject($store.$state),
       trigger: true,
       resetUndone: false,
     } as History)

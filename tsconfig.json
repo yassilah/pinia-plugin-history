@@ -7,9 +7,9 @@
     "composite": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
-
     "rootDir": ".",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "types": ["@peeky/runner"]
   },
   "include": ["src"]
 }

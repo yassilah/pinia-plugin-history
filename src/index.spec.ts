@@ -82,7 +82,6 @@ describe('Pinia History', () => {
     setupStore.count = 5
     setupStore.$patch({ count: 3 })
     expect(setupStore.count).toEqual(3)
-    expect(setupStore.count).toEqual(3)
     setupStore.undo()
     expect(setupStore.count).toEqual(5)
     setupStore.undo()
@@ -172,17 +171,17 @@ describe('Pinia History', () => {
 
     store.$patch({ count: 2 })
 
-    expect(localStorage.getItem(undoKey)).toEqual('{"count":1}')
+    expect(localStorage.getItem(undoKey)).toEqual('{"count":[2,1]}')
     expect(localStorage.getItem(redoKey)).toEqual('')
 
     store.undo()
 
     expect(localStorage.getItem(undoKey)).toEqual('')
-    expect(localStorage.getItem(redoKey)).toEqual('{"count":2}')
+    expect(localStorage.getItem(redoKey)).toEqual('{"count":[1,2]}')
 
     store.redo()
 
-    expect(localStorage.getItem(undoKey)).toEqual('{"count":1}')
+    expect(localStorage.getItem(undoKey)).toEqual('{"count":[2,1]}')
     expect(localStorage.getItem(redoKey)).toEqual('')
   })
 
@@ -204,7 +203,9 @@ describe('Pinia History', () => {
             },
             set(store, type, value) {
               storage[store.$id] ??= {}
-              storage[store.$id][type] = value.join(',')
+              storage[store.$id][type] = value
+                .map((value) => JSON.stringify(value))
+                .join(',')
             },
             remove(store, type) {
               delete storage[store.$id]?.[type]
@@ -216,17 +217,17 @@ describe('Pinia History', () => {
 
     store.$patch({ count: 2 })
 
-    expect(storage[store.$id].undo).toMatchObject({ count: 1 })
+    expect(storage[store.$id].undo).toEqual('{"count":[2,1]}')
     expect(storage[store.$id].redo).toEqual('')
 
     store.undo()
 
     expect(storage[store.$id].undo).toEqual('')
-    expect(storage[store.$id].redo).toEqual({ count: 2 })
+    expect(storage[store.$id].redo).toEqual('{"count":[1,2]}')
 
     store.redo()
 
-    expect(storage[store.$id].undo).toEqual({ count: 1 })
+    expect(storage[store.$id].undo).toEqual('{"count":[2,1]}')
     expect(storage[store.$id].redo).toEqual('')
   })
 })
