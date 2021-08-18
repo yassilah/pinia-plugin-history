@@ -216,17 +216,17 @@ describe('Pinia History', () => {
 
     store.$patch({ count: 2 })
 
-    expect(storage[store.$id].undo).toEqual('{"count":1}')
+    expect(storage[store.$id].undo).toMatchObject({ count: 1 })
     expect(storage[store.$id].redo).toEqual('')
 
     store.undo()
 
     expect(storage[store.$id].undo).toEqual('')
-    expect(storage[store.$id].redo).toEqual('{"count":2}')
+    expect(storage[store.$id].redo).toEqual({ count: 2 })
 
     store.redo()
 
-    expect(storage[store.$id].undo).toEqual('{"count":1}')
+    expect(storage[store.$id].undo).toEqual({ count: 1 })
     expect(storage[store.$id].redo).toEqual('')
   })
 })

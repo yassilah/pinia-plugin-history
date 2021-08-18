@@ -94,5 +94,8 @@
   "bugs": {
     "url": "https://github.com/yassilah/pinia-plugin-history/issues"
   },
-  "homepage": "https://github.com/yassilah/pinia-plugin-history#readme"
+  "homepage": "https://github.com/yassilah/pinia-plugin-history#readme",
+  "dependencies": {
+    "jsondiffpatch": "^0.4.1"
+  }
 }
