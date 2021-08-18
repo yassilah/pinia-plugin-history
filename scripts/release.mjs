@@ -72,11 +72,11 @@ async function main() {
 
   // Build the package.
   step('\nBuilding the package...')
-  await run('npm', ['run', 'build'])
+  await run('yarn', ['build'])
 
   // Generate the changelog.
   step('\nGenerating the changelog...')
-  await run('npm', ['run', 'changelog'])
+  await run('yarn', ['changelog'])
 
   const { yes: changelogOk } = await prompt({
     type: 'confirm',
@@ -96,7 +96,7 @@ async function main() {
 
   // Publish the package.
   step('\nPublishing the package...')
-  await run('npm', [
+  await run('yarn', [
     'publish',
     // '--new-version',
     // targetVersion,
