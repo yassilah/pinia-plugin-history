@@ -28,7 +28,7 @@
     "lint": "prettier -c --parser typescript \"src/**/*.[jt]s?(x)\"",
     "lint:fix": "yarn run lint --write",
     "test:types": "tsc --build ./tsconfig.json",
-    "build": "npm run build:esm & npm run build:iife & wait",
+    "build": "yarn build:esm & yarn build:iife & wait",
     "build:esm": "tsup src/index.ts --format esm,cjs --dts --target es2020",
     "build:iife": "tsup src/index.ts --format iife --minify --global-name PiniaHistory --target es2020"
   },
