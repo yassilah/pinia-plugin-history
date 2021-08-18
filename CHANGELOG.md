@@ -1,6 +1,15 @@
 # [1.2.0](https://github.com/yassilah/pinia-plugin-history/compare/v1.1.1...v1.2.0) (2021-08-18)
 
 
+### Features
+
+* **lzutf8:** Compress/decompress string ([1c58779](https://github.com/yassilah/pinia-plugin-history/commit/1c58779a57ee293155c9aec6515693a22972d281))
+
+
+
+# [1.2.0](https://github.com/yassilah/pinia-plugin-history/compare/v1.1.1...v1.2.0) (2021-08-18)
+
+
 
 # [1.2.0](https://github.com/yassilah/pinia-plugin-history/compare/v1.1.0...v1.2.0) (2021-08-18)
 
