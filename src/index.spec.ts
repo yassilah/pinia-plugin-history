@@ -171,17 +171,19 @@ describe('Pinia History', () => {
 
     store.$patch({ count: 2 })
 
-    expect(localStorage.getItem(undoKey)).toEqual('{"count":[2,1]}')
+    expect(localStorage.getItem(undoKey)).toEqual('eyJjb3VudCI6WzIsMV19')
     expect(localStorage.getItem(redoKey)).toEqual('')
 
     store.undo()
 
+    expect(store.count).toEqual(1)
     expect(localStorage.getItem(undoKey)).toEqual('')
-    expect(localStorage.getItem(redoKey)).toEqual('{"count":[1,2]}')
+    expect(localStorage.getItem(redoKey)).toEqual('eyJjb3VudCI6WzEsMl19')
 
     store.redo()
 
-    expect(localStorage.getItem(undoKey)).toEqual('{"count":[2,1]}')
+    expect(store.count).toEqual(2)
+    expect(localStorage.getItem(undoKey)).toEqual('eyJjb3VudCI6WzIsMV19')
     expect(localStorage.getItem(redoKey)).toEqual('')
   })
 
@@ -222,11 +224,13 @@ describe('Pinia History', () => {
 
     store.undo()
 
+    expect(store.count).toEqual(1)
     expect(storage[store.$id].undo).toEqual('')
     expect(storage[store.$id].redo).toEqual('{"count":[1,2]}')
 
     store.redo()
 
+    expect(store.count).toEqual(2)
     expect(storage[store.$id].undo).toEqual('{"count":[2,1]}')
     expect(storage[store.$id].redo).toEqual('')
   })

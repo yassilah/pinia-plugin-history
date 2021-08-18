@@ -90,6 +90,7 @@
   },
   "homepage": "https://github.com/yassilah/pinia-plugin-history#readme",
   "dependencies": {
-    "jsondiffpatch": "^0.4.1"
+    "jsondiffpatch": "^0.4.1",
+    "lzutf8": "^0.6.0"
   }
 }
