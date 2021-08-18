@@ -1,3 +1,12 @@
+# [1.3.0](https://github.com/yassilah/pinia-plugin-history/compare/v1.2.1...v1.3.0) (2021-08-18)
+
+
+### Bug Fixes
+
+* **diff:** Remove jsonpatchdiff for incompatibility ([3d23b1a](https://github.com/yassilah/pinia-plugin-history/commit/3d23b1a741be068665f57530cdfdf1fbc77d8939))
+
+
+
 ## [1.2.1](https://github.com/yassilah/pinia-plugin-history/compare/v1.2.0...v1.2.1) (2021-08-18)
 
 
