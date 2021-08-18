@@ -1,11 +1,7 @@
-import {
-  PiniaPluginContext,
-  StateTree,
-  Store,
-  SubscriptionCallbackMutation,
-} from 'pinia'
+import { PiniaPluginContext, Store, SubscriptionCallbackMutation } from 'pinia'
 import { computed, ComputedRef, reactive } from 'vue'
 import { Delta, diff, patch, reverse } from 'jsondiffpatch'
+import { compress, decompress } from 'lzutf8'
 
 declare module 'pinia' {
   export interface DefineStoreOptionsBase<S, Store> {
@@ -111,7 +107,11 @@ export const BasePiniaHistoryOptions = {
         const value = localStorage.getItem(key)
         if (!value) return
 
-        return value.split(',').map((value) => JSON.parse(value))
+        const string = decompress(value, {
+          inputEncoding: 'Base64',
+        }) as string
+
+        return string.split(',').map((value) => JSON.parse(value))
       }
     },
     set(
@@ -121,9 +121,14 @@ export const BasePiniaHistoryOptions = {
     ) {
       if (typeof localStorage !== undefined) {
         const key = persistentKey(store, type)
+
+        const string = value.map((value) => JSON.stringify(value)).join(',')
+
         localStorage.setItem(
           key,
-          value.map((value) => JSON.stringify(value)).join(',')
+          compress(string, {
+            outputEncoding: 'Base64',
+          })
         )
       }
     },

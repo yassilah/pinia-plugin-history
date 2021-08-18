@@ -1,6 +1,6 @@
 {
   "name": "pinia-plugin-history",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Create a history (undo/redo) in your pinia 🍍 stores!",
   "publishConfig": {
     "access": "public"
@@ -28,7 +28,7 @@
     "lint": "prettier -c --parser typescript \"src/**/*.[jt]s?(x)\"",
     "lint:fix": "yarn run lint --write",
     "test:types": "tsc --build ./tsconfig.json",
-    "build": "npm run build:esm & npm run build:iife & wait",
+    "build": "yarn build:esm & yarn build:iife & wait",
     "build:esm": "tsup src/index.ts --format esm,cjs --dts --target es2020",
     "build:iife": "tsup src/index.ts --format iife --minify --global-name PiniaHistory --target es2020"
   },
@@ -90,6 +90,7 @@
   },
   "homepage": "https://github.com/yassilah/pinia-plugin-history#readme",
   "dependencies": {
-    "jsondiffpatch": "^0.4.1"
+    "jsondiffpatch": "^0.4.1",
+    "lzutf8": "^0.6.0"
   }
 }
