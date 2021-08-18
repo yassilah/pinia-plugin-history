@@ -1,6 +1,5 @@
 import { PiniaPluginContext, Store, SubscriptionCallbackMutation } from 'pinia'
 import { computed, ComputedRef, reactive } from 'vue'
-import { Delta, diff, patch, reverse } from 'jsondiffpatch'
 import { compress, decompress } from 'lzutf8'
 
 declare module 'pinia' {
@@ -56,15 +55,8 @@ export interface HistoryPluginOptions {
   max: number
   persistent: boolean
   persistentStrategy: {
-    get(
-      store: HistoryStore,
-      type: 'undo' | 'redo'
-    ): (Delta | undefined)[] | undefined
-    set(
-      store: HistoryStore,
-      type: 'undo' | 'redo',
-      value: (Delta | undefined)[]
-    ): void
+    get(store: HistoryStore, type: 'undo' | 'redo'): string[] | undefined
+    set(store: HistoryStore, type: 'undo' | 'redo', value: string[]): void
     remove(store: HistoryStore, type: 'undo' | 'redo'): void
   }
 }
@@ -80,9 +72,9 @@ export interface HistoryPluginGetters {
 }
 
 export interface History extends HistoryPluginOptions {
-  done: (Delta | undefined)[]
-  undone: (Delta | undefined)[]
-  current: any
+  done: string[]
+  undone: string[]
+  current: string
   trigger: boolean
 }
 
@@ -98,10 +90,7 @@ export const BasePiniaHistoryOptions = {
   max: 10,
   persistent: false,
   persistentStrategy: {
-    get(
-      store: HistoryStore,
-      type: 'undo' | 'redo'
-    ): (Delta | undefined)[] | undefined {
+    get(store: HistoryStore, type: 'undo' | 'redo'): string[] | undefined {
       if (typeof localStorage !== undefined) {
         const key = persistentKey(store, type)
         const value = localStorage.getItem(key)
@@ -111,18 +100,14 @@ export const BasePiniaHistoryOptions = {
           inputEncoding: 'Base64',
         }) as string
 
-        return string.split(',').map((value) => JSON.parse(value))
+        return string.split(',')
       }
     },
-    set(
-      store: HistoryStore,
-      type: 'undo' | 'redo',
-      value: (Delta | undefined)[]
-    ) {
+    set(store: HistoryStore, type: 'undo' | 'redo', value: string[]) {
       if (typeof localStorage !== undefined) {
         const key = persistentKey(store, type)
 
-        const string = value.map((value) => JSON.stringify(value)).join(',')
+        const string = value.join(',')
 
         localStorage.setItem(
           key,
@@ -139,16 +124,6 @@ export const BasePiniaHistoryOptions = {
       }
     },
   },
-}
-
-/**
- * Returns raw object.
- *
- * @param object
- * @returns
- */
-function toObject(object: any) {
-  return JSON.parse(JSON.stringify(object))
 }
 
 /**
@@ -231,23 +206,22 @@ function createStackMethod(
   const can = method === 'undo' ? 'canUndo' : 'canRedo'
   return () => {
     if ($store[can]) {
-      const { undone, done, max } = $history
+      const { undone, done, max, current } = $history
       const stack = method === 'undo' ? done : undone
       const reverseStack = method === 'undo' ? undone : done
 
-      const delta = stack.pop()
+      const state = stack.pop()
 
-      if (delta === undefined) return
+      if (state === undefined) return
 
       if (reverseStack.length >= max) {
         reverseStack.splice(0, 1)
       }
 
-      reverseStack.push(reverse(delta))
+      reverseStack.push(current)
 
       $history.trigger = false
-      const newState = patch(toObject($store.$state), delta)
-      $store.$patch(newState)
+      $store.$patch(JSON.parse(state))
       $history.trigger = true
 
       persistHistory($store, $history)
@@ -275,14 +249,12 @@ function createWatcher($store: HistoryStore, $history: History) {
         done.splice(0, 1)
       }
 
-      const delta = diff(toObject(state), current)
-
-      done.push(delta)
+      done.push(current)
       $history.undone = []
       persistHistory($store, $history)
     }
 
-    $history.current = toObject(state)
+    $history.current = JSON.stringify(state)
   }
 }
 
@@ -324,7 +296,7 @@ export const PiniaHistory = ({ options, store }: PiniaPluginContext) => {
       persistentStrategy,
       done: [],
       undone: [],
-      current: toObject($store.$state),
+      current: JSON.stringify($store.$state),
       trigger: true,
       resetUndone: false,
     } as History)

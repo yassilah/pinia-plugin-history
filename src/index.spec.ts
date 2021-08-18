@@ -91,6 +91,30 @@ describe('Pinia History', () => {
     expect(setupStore.canUndo).toBeFalsy()
   })
 
+  it('should work with objects (key removal)', async () => {
+    const useStore = defineStore('complex', {
+      state: () => ({ someObject: { someKey: 1, someOtherKey: 4 } }),
+      history: true,
+    })
+
+    const store = useStore()
+
+    // @ts-ignore
+    delete store.someObject.someOtherKey
+
+    expect(store.$state).toMatchObject({ someObject: { someKey: 1 } })
+
+    store.undo()
+
+    expect(store.$state).toMatchObject({
+      someObject: { someKey: 1, someOtherKey: 4 },
+    })
+
+    store.redo()
+
+    expect(store.$state).toMatchObject({ someObject: { someKey: 1 } })
+  })
+
   it('should redo', async () => {
     const setupStore = useSetupStore()
     setupStore.$patch({ count: 2 })
@@ -171,19 +195,19 @@ describe('Pinia History', () => {
 
     store.$patch({ count: 2 })
 
-    expect(localStorage.getItem(undoKey)).toEqual('eyJjb3VudCI6WzIsMV19')
+    expect(localStorage.getItem(undoKey)).toEqual('eyJjb3VudCI6MX0=')
     expect(localStorage.getItem(redoKey)).toEqual('')
 
     store.undo()
 
     expect(store.count).toEqual(1)
     expect(localStorage.getItem(undoKey)).toEqual('')
-    expect(localStorage.getItem(redoKey)).toEqual('eyJjb3VudCI6WzEsMl19')
+    expect(localStorage.getItem(redoKey)).toEqual('eyJjb3VudCI6Mn0=')
 
     store.redo()
 
     expect(store.count).toEqual(2)
-    expect(localStorage.getItem(undoKey)).toEqual('eyJjb3VudCI6WzIsMV19')
+    expect(localStorage.getItem(undoKey)).toEqual('eyJjb3VudCI6MX0=')
     expect(localStorage.getItem(redoKey)).toEqual('')
   })
 
@@ -201,13 +225,11 @@ describe('Pinia History', () => {
           persistent: true,
           persistentStrategy: {
             get(store, type) {
-              return storage[store.$id]?.[type]
+              return storage[store.$id]?.[type].split(',')
             },
             set(store, type, value) {
               storage[store.$id] ??= {}
-              storage[store.$id][type] = value
-                .map((value) => JSON.stringify(value))
-                .join(',')
+              storage[store.$id][type] = value.join(',')
             },
             remove(store, type) {
               delete storage[store.$id]?.[type]
@@ -219,19 +241,19 @@ describe('Pinia History', () => {
 
     store.$patch({ count: 2 })
 
-    expect(storage[store.$id].undo).toEqual('{"count":[2,1]}')
+    expect(storage[store.$id].undo).toEqual('{"count":1}')
     expect(storage[store.$id].redo).toEqual('')
 
     store.undo()
 
     expect(store.count).toEqual(1)
     expect(storage[store.$id].undo).toEqual('')
-    expect(storage[store.$id].redo).toEqual('{"count":[1,2]}')
+    expect(storage[store.$id].redo).toEqual('{"count":2}')
 
     store.redo()
 
     expect(store.count).toEqual(2)
-    expect(storage[store.$id].undo).toEqual('{"count":[2,1]}')
+    expect(storage[store.$id].undo).toEqual('{"count":1}')
     expect(storage[store.$id].redo).toEqual('')
   })
 })
