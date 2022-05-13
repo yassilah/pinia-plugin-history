@@ -1,6 +1,7 @@
 import { PiniaPluginContext, Store, SubscriptionCallbackMutation } from 'pinia'
 import { computed, ComputedRef, reactive } from 'vue'
-import { compress, decompress } from 'lzutf8'
+import lzutf8 from 'lzutf8'
+const { compress, decompress } = lzutf8
 
 declare module 'pinia' {
   export interface DefineStoreOptionsBase<S, Store> {
@@ -10,7 +11,7 @@ declare module 'pinia' {
   export function defineStore<
     Id extends string,
     S extends StateTree = {},
-    G extends GettersTree<S> = {},
+    G extends _GettersTree<S> = {},
     A = {},
     H = false
   >(
@@ -23,7 +24,7 @@ declare module 'pinia' {
   export function defineStore<
     Id extends string,
     S extends StateTree = {},
-    G extends GettersTree<S> = {},
+    G extends _GettersTree<S> = {},
     A = {},
     H = false
   >(
