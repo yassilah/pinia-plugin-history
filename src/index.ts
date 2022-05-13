@@ -1,7 +1,7 @@
 import { PiniaPluginContext, Store, SubscriptionCallbackMutation } from 'pinia'
 import { computed, ComputedRef, reactive } from 'vue'
-import lzutf8 from 'lzutf8';
-const { compress, decompress } = lzutf8;
+import lzutf8 from 'lzutf8'
+const { compress, decompress } = lzutf8
 
 declare module 'pinia' {
   export interface DefineStoreOptionsBase<S, Store> {
@@ -45,11 +45,11 @@ declare module 'pinia' {
   ): H extends false
     ? StoreDefinition<Id, StoreState<SS>, StoreGetters<SS>, StoreActions<SS>>
     : StoreDefinition<
-      Id,
-      StoreState<SS>,
-      StoreGetters<SS> & HistoryPluginGetters,
-      StoreActions<SS> & HistoryPluginActions
-    >
+        Id,
+        StoreState<SS>,
+        StoreGetters<SS> & HistoryPluginGetters,
+        StoreActions<SS> & HistoryPluginActions
+      >
 }
 
 export interface HistoryPluginOptions {
@@ -81,8 +81,8 @@ export interface History extends HistoryPluginOptions {
 
 export interface HistoryStore
   extends Store,
-  HistoryPluginGetters,
-  HistoryPluginActions { }
+    HistoryPluginGetters,
+    HistoryPluginActions {}
 
 /**
  * Base options for the history.
