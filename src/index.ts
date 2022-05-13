@@ -11,7 +11,7 @@ declare module 'pinia' {
   export function defineStore<
     Id extends string,
     S extends StateTree = {},
-    G extends GettersTree<S> = {},
+    G extends _GettersTree<S> = {},
     A = {},
     H = false
   >(
@@ -24,7 +24,7 @@ declare module 'pinia' {
   export function defineStore<
     Id extends string,
     S extends StateTree = {},
-    G extends GettersTree<S> = {},
+    G extends _GettersTree<S> = {},
     A = {},
     H = false
   >(
